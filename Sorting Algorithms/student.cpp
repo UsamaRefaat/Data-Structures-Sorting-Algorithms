@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 #include <string>
-#include<functional>
+#include <functional>
 #include <chrono>
-#include<utility>
+#include <utility>
 using namespace std;
 using namespace std::chrono;
 class Student
@@ -32,7 +32,7 @@ public:
     {
         return Id;
     }
-    
+
     struct LessThanName
     {
         int &comparisons;
@@ -45,8 +45,6 @@ public:
             return a.Name < b.Name;
         }
     };
-
-  
 
     struct LessEqualName
     {
@@ -61,7 +59,6 @@ public:
         }
     };
 
-
     struct GreaterThanGPA
     {
         int &comparisons;
@@ -74,7 +71,6 @@ public:
             return a.GPA > b.GPA;
         }
     };
-
 
     struct GreaterEqualGPA
     {
@@ -148,38 +144,22 @@ void BubbleSort(T arr[], int n, Compare compareFunction)
 }
 
 template <class T, class Compare>
-int Partition(T arr[], int l, int r, T pivot, Compare compareFunction)
+void ShellSort(T arr[], int n, Compare compareFunction)
 {
-    int LeftPointer = l;
-    int RightPointer = r;
-
-    while (LeftPointer < RightPointer)
+    for (int gap = n / 2; gap > 0; gap /= 2)
     {
-        while (compareFunction(arr[LeftPointer], pivot) && LeftPointer < RightPointer)
+        for (int i = gap; i < n; i++)
         {
-            LeftPointer++;
+            T key = arr[i];
+            int j = i;
+            while (j >= gap && !compareFunction(arr[j - gap], key))
+            {
+                arr[j] = arr[j - gap];
+                j -= gap;
+            }
+            arr[j] = key;
         }
-        while (compareFunction(pivot, arr[RightPointer]) && LeftPointer < RightPointer)
-        {
-            RightPointer--;
-        }
-        swap(arr[LeftPointer], arr[RightPointer]);
     }
-    swap(arr[LeftPointer], arr[r]);
-    return LeftPointer;
-}
-
-template <class T, class Compare>
-void QuickSort(T arr[], int l, int r, Compare compareFunction)
-{
-    if (l >= r)
-    {
-        return;
-    }
-    T pivot = arr[r];
-    int ptr = Partition(arr, l, r, pivot, compareFunction);
-    QuickSort(arr, l, ptr - 1, compareFunction);
-    QuickSort(arr, l + 1, r, compareFunction);
 }
 
 template <class T, class Compare>
@@ -240,6 +220,34 @@ void MergeSort(T Array[], int Size, Compare compareFunction)
     Merge(Array, LeftArray, RightArray, MidIndex, Size - MidIndex, compareFunction);
 }
 
+template <typename T, typename Compare>
+int Partition(T arr[] , int l, int r, Compare compareFunction)
+{
+    T pivot = arr[r];
+    int i = l - 1;
+    for (int j = l; j < r; j++)
+    {
+        if (compareFunction(arr[j], pivot))
+        {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[r]); 
+    return i + 1; // index of pivot
+}
+
+template <typename T, typename Compare>
+void QuickSort(T arr[] , int l, int r, Compare compareFunction)
+{
+    if (l < r)
+    {
+        int pivot = Partition(arr, l, r, compareFunction); // index of pivot
+        QuickSort(arr, l, pivot - 1, compareFunction);
+        QuickSort(arr, pivot + 1, r, compareFunction);
+    }
+}
+
 pair<int, Student *> GetTheData()
 {
     ifstream Data("student.txt");
@@ -279,9 +287,9 @@ void SortAndSave(Student *Students, int NumberOfStudents, const string &fileName
 {
     Student *Students_copy = new Student[NumberOfStudents];
     copy(Students, Students + NumberOfStudents, Students_copy);
-    comparisons = 0; 
+    comparisons = 0;
     auto start = high_resolution_clock::now();
-    if (algorithmName =="Selection Sort")
+    if (algorithmName == "Selection Sort")
     {
         SelectionSort(Students_copy, NumberOfStudents, compareFunction);
         comparisons = compareFunction.comparisons;
@@ -301,9 +309,14 @@ void SortAndSave(Student *Students, int NumberOfStudents, const string &fileName
         MergeSort(Students_copy, NumberOfStudents, compareFunction);
         comparisons = compareFunction.comparisons;
     }
+    else if (algorithmName == "Shell Sort")
+    {
+        ShellSort(Students_copy, NumberOfStudents, compareFunction);
+        comparisons = compareFunction.comparisons;
+    }
     else if (algorithmName == "Quick Sort")
     {
-        QuickSort(Students_copy, 0 , NumberOfStudents-1, compareFunction);
+        QuickSort(Students_copy, 0, NumberOfStudents - 1, compareFunction);
         comparisons = compareFunction.comparisons;
     }
     else
@@ -320,25 +333,28 @@ void SortAndSave(Student *Students, int NumberOfStudents, const string &fileName
 int main()
 {
 
+    //---------------------------------------------------------------------------------------------------
     pair<int, Student *> data = GetTheData();
     int NumberOfStudents = data.first;
     Student *Students = data.second;
     int comparisons = 0;
     //---------------------------------------------------------------------------------------------------
 
-    //sorting by Name
-     SortAndSave (Students, NumberOfStudents, "SortedByName.txt", "Selection Sort", Student::LessThanName(comparisons),comparisons);
-     SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Insertion Sort", Student::LessThanName(comparisons), comparisons);
-     SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Bubble Sort", Student::LessThanName(comparisons), comparisons);
-     SortAndSave (Students, NumberOfStudents, "SortedByName.txt", "Merge Sort", Student::LessEqualName(comparisons),comparisons); 
-     SortAndSave (Students, NumberOfStudents, "SortedByName.txt", "Quick Sort", Student::LessEqualName(comparisons),comparisons);
+    // sorting by Name
+    SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Selection Sort", Student::LessThanName(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Insertion Sort", Student::LessThanName(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Bubble Sort", Student::LessThanName(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Shell Sort", Student::LessThanName(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Merge Sort", Student::LessEqualName(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByName.txt", "Quick Sort", Student::LessThanName(comparisons), comparisons);
 
     // Sorting by GPA
-     SortAndSave (Students, NumberOfStudents, "SortedByGPA.txt", "Selection Sort", Student::GreaterThanGPA(comparisons), comparisons);
-     SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Insertion Sort", Student::GreaterThanGPA(comparisons), comparisons);
-     SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Bubble Sort", Student::GreaterThanGPA(comparisons), comparisons);
-     SortAndSave (Students, NumberOfStudents, "SortedByGPA.txt", "Merge Sort", Student::GreaterEqualGPA(comparisons),comparisons);
-     SortAndSave (Students, NumberOfStudents, "SortedByGPA.txt", "Quick Sort", Student::GreaterEqualGPA(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Selection Sort", Student::GreaterThanGPA(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Insertion Sort", Student::GreaterThanGPA(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Bubble Sort", Student::GreaterThanGPA(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Shell Sort", Student::GreaterThanGPA(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Merge Sort", Student::GreaterEqualGPA(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Quick Sort", Student::GreaterThanGPA(comparisons), comparisons);
 
-     return 0;
+    return 0;
 }
