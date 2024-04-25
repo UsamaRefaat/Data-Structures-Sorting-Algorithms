@@ -7,7 +7,7 @@
 * Sorts student data by GPA (descending order).  
 * Uses various sorting algorithms: Selection Sort, Insertion Sort, Bubble Sort, Shell Sort , Merge Sort, Quick Sort.  
 * Measures execution time and number of comparisons for each sorting algorithm.  
-* Saves the sorted data and performance metrics to separate files.  
+* Saves the sorted data with the name, running time, and number of comparisons for each sorting algorithm used to separate files.  
 
 **Data Format**
 
