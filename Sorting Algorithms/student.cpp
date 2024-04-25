@@ -220,7 +220,7 @@ void MergeSort(T Array[], int Size, Compare compareFunction)
     Merge(Array, LeftArray, RightArray, MidIndex, Size - MidIndex, compareFunction);
 }
 
-template <typename T, typename Compare>
+template <class T, class Compare>
 int Partition(T arr[] , int l, int r, Compare compareFunction)
 {
     T pivot = arr[r];
@@ -237,8 +237,8 @@ int Partition(T arr[] , int l, int r, Compare compareFunction)
     return i + 1; // index of pivot
 }
 
-template <typename T, typename Compare>
-void QuickSort(T arr[] , int l, int r, Compare compareFunction)
+template <class T, class Compare >
+    void QuickSort(T arr[], int l, int r, Compare compareFunction)
 {
     if (l < r)
     {
