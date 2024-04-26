@@ -5,7 +5,7 @@
 * Reads student data from a text file ("student.txt").  
 * Sorts student data by name (ascending order).  
 * Sorts student data by GPA (descending order).  
-* Uses various sorting algorithms: Selection Sort, Insertion Sort, Bubble Sort, Shell Sort , Merge Sort, Quick Sort.  
+* Uses various sorting algorithms: Selection Sort, Insertion Sort, Bubble Sort, Shell Sort , Merge Sort, Quick Sort , Count Sort *(see the note on Count sort below)*.  
 * Measures execution time and number of comparisons for each sorting algorithm.  
 * Saves the sorted data with the name, running time, and number of comparisons for each sorting algorithm used to separate files.  
 
@@ -21,7 +21,8 @@ The student data file ("student.txt") should be formatted as follows:
 
 **Example Data:**
 
-```4
+```
+4
 Sara Ahmed
 78697
 3.1
@@ -41,7 +42,8 @@ Mohamed Kamal
 
 **Example Output:**
 
-```Algorithm: Insertion Sort
+```
+Algorithm: Insertion Sort
 Number Of Comparisons: 5
 Running Time: 0.001 milliseconds
 
@@ -62,7 +64,8 @@ Sara Ahmed
 
 **Example Output:** 
 
-```Algorithm: Selection Sort  
+```
+Algorithm: Selection Sort  
 Number Of Comparisons: 6  
 Running Time: 0.004 milliseconds  
 Mariam  
@@ -78,5 +81,6 @@ Mohamed Kamal
 97848  
 2.2
 ```
+I implemented Count Sort to sort by GPA, despite it not being the most suitable sort for this data type since it is efficient for integers. However, I implemented it for the sake of practice. I handled sorting the GPA by multiplying each GPA by 100 to convert them into integers before applying the sorting algorithm.  
+    
 Thank you.
-
