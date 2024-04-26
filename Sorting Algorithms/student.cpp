@@ -221,7 +221,7 @@ void MergeSort(T Array[], int Size, Compare compareFunction)
 }
 
 template <class T, class Compare>
-int Partition(T arr[] , int l, int r, Compare compareFunction)
+int Partition(T arr[], int l, int r, Compare compareFunction)
 {
     T pivot = arr[r];
     int i = l - 1;
@@ -233,12 +233,12 @@ int Partition(T arr[] , int l, int r, Compare compareFunction)
             swap(arr[i], arr[j]);
         }
     }
-    swap(arr[i + 1], arr[r]); 
+    swap(arr[i + 1], arr[r]);
     return i + 1; // index of pivot
 }
 
-template <class T, class Compare >
-    void QuickSort(T arr[], int l, int r, Compare compareFunction)
+template <class T, class Compare>
+void QuickSort(T arr[], int l, int r, Compare compareFunction)
 {
     if (l < r)
     {
@@ -248,6 +248,41 @@ template <class T, class Compare >
     }
 }
 
+template <class T>
+void CountSort(T arr[], int n, int k)
+{
+    // K is passed with value equal to 400 as Max GPA will be 4
+    vector<int> count(k + 1, 0); // initialize 0
+
+    //  Freq array
+    for (int i = 0; i < n; ++i)
+    {
+        int key = static_cast<int>(arr[i].GetGPA() * 100);
+        count[key]++;
+    }
+
+    // Prefix Sum
+    for (int i = 1; i <= k + 1; ++i)
+    {
+        count[i] += count[i - 1];
+    }
+
+    T *output = new T[n];
+    for (int i = n - 1; i >= 0; --i)
+    {
+        int key = static_cast<int>(arr[i].GetGPA() * 100);
+        // output[count[key] - 1] = arr[i]; ascending
+        output[n - count[key]] = arr[i]; // descending
+        count[key]--;
+    }
+
+    // Copy to original arr
+    for (int i = 0; i < n; ++i)
+    {
+        arr[i] = output[i];
+    }
+    delete[] output;
+}
 pair<int, Student *> GetTheData()
 {
     ifstream Data("student.txt");
@@ -319,6 +354,10 @@ void SortAndSave(Student *Students, int NumberOfStudents, const string &fileName
         QuickSort(Students_copy, 0, NumberOfStudents - 1, compareFunction);
         comparisons = compareFunction.comparisons;
     }
+    else if (algorithmName == "Count Sort")
+    {
+        CountSort(Students_copy, NumberOfStudents, 400);
+    }
     else
     {
         cout << "Wrong Sorting algorithm name" << endl;
@@ -355,6 +394,7 @@ int main()
     SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Shell Sort", Student::GreaterThanGPA(comparisons), comparisons);
     SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Merge Sort", Student::GreaterEqualGPA(comparisons), comparisons);
     SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Quick Sort", Student::GreaterThanGPA(comparisons), comparisons);
+    SortAndSave(Students, NumberOfStudents, "SortedByGPA.txt", "Count Sort", Student::GreaterThanGPA(comparisons), comparisons);
 
     return 0;
 }
