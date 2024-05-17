@@ -241,7 +241,7 @@ class aVL
 
 class heap
 {
-    // AbdulRahman code;
+    // AbdulRahman , MoAli code;
 };
 
 void readItems(istream &input,
@@ -276,8 +276,22 @@ void displayMainMenu()
     cout << "Enter your choice: ";
 }
 
+binarySearchTree<item, item::LessThanName> bstByName;
+binarySearchTree<item, item::LessThanPrice> bstByPrice;
 void BSTMenu(binarySearchTree<item, item::LessThanName> &bstByName, binarySearchTree<item, item::LessThanPrice> &bstByPrice)
 {
+    
+    ifstream inputFile("input.txt");
+
+    if (!inputFile.is_open())
+    {
+        cout << "Error opening file!" << endl;
+        return ;
+    }
+
+    readItems(inputFile, bstByName, bstByPrice);
+
+    inputFile.close();
     int choice;
     do
     {
@@ -352,7 +366,7 @@ void BSTMenu(binarySearchTree<item, item::LessThanName> &bstByName, binarySearch
 
 void HeapMenu()
 {
-    // Abdulrahman
+    // Abdulrahman , MoAli
 }
 
 void AVLTreeMenu()
@@ -362,21 +376,6 @@ void AVLTreeMenu()
 
 int main()
 {
-    binarySearchTree<item, item::LessThanName> bstByName;
-    binarySearchTree<item, item::LessThanPrice> bstByPrice;
-
-    ifstream inputFile("input.txt");
-
-    if (!inputFile.is_open())
-    {
-        cout << "Error opening file!" << endl;
-        return 1;
-    }
-
-    readItems(inputFile, bstByName, bstByPrice);
-
-    inputFile.close();
-
     int choice;
     bool exitProgram = false;
 
