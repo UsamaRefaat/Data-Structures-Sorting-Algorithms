@@ -20,6 +20,15 @@ public:
     Compare compare;
 
     binarySearchTree() : root(NULL), compare(Compare()) {}
+    ~binarySearchTree() {this->clear(this->root);}
+
+    void clear(node * root){
+        if(!root) return ;
+        clear(root->left);
+        clear(root->right);
+        delete root ; 
+    }
+
 
     bool isNull(node *tRoot) const
     {
